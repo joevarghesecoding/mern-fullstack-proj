@@ -1,0 +1,28 @@
+{
+  "name": "mern-fullstack-project",
+  "version": "1.0.0",
+  "description": "\"# mern-fullstack-proj\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joevarghesecoding/mern-fullstack-proj.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joevarghesecoding/mern-fullstack-proj/issues"
+  },
+  "homepage": "https://github.com/joevarghesecoding/mern-fullstack-proj#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
