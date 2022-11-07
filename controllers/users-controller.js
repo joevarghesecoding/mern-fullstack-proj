@@ -18,6 +18,11 @@ const getAllUsers = (req, res, send) => {
 const signUp = (req, res, send) => {
     const { name, lname, email, password } = req.body;
 
+    const hasUser = DUMMY_USERS.find( u => u.email === email);
+    if( hasUser ){
+        throw new HttpError('Could not create user, email already exists.', 422);
+    }
+    
     const newUser = {
         uid: uuidv4(),
         name,
@@ -28,22 +33,21 @@ const signUp = (req, res, send) => {
 
     DUMMY_USER.push( newUser );
 
-    res.status(200).json({ message: 'User created '});
+    res.status(201).json({ message: 'User created '});
 }
 
 const logIn = (req, res, send) => {
     const { email, password } = req.body;
 
-    const found = DUMMY_USER.findIndex( 
-        u => u.email === email && u.password === password
+    const found = DUMMY_USER.find( 
+        u => u.email === email
     );
 
-    console.log(found);
-
-    if(found === -1){
-       return res.status(404).json({ message: 'Login unsuccessful, user not found'});
+    if(!found || found.password !== password){
+       throw new HttpError('Count not identify user', 401);
     }
 
+    
     res.status(200).json({ message: 'Login Successful '});
 }
 
