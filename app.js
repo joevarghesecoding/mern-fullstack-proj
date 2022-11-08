@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const placesRoutes = require('./routes/places-routes');
 const userRoutes = require('./routes/users-routes');
@@ -28,4 +29,12 @@ app.use((error, req, res, next) => {
 
 });
 
-app.listen(process.env.PORT);
+mongoose
+    .connect('mongodb+srv://joev1234:joev1234@merncluster.bviydpu.mongodb.net/places?retryWrites=true&w=majority')
+    .then( () => {
+        app.listen(process.env.PORT);
+    })
+    .catch( err => {
+        console.log(err);
+    });
+
