@@ -115,8 +115,7 @@ const createPlace = async function(req, res, next) {
 const updatePlace = async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        console.log(errors);
-        throw new HttpError('Invalid changes passed, please check', 422);
+        return next(HttpError('Invalid changes passed, please check', 422));
     }
 
    const placeId = req.params.pid;
@@ -188,7 +187,7 @@ const deletePlace = async (req, res, next) => {
         );
         return next(error);
     }
-    
+
     res.status(200).json({ message: 'Deleted place.'});
 };
 
