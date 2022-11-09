@@ -30,7 +30,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-    .connect('mongodb+srv://joev1234:joev1234@merncluster.bviydpu.mongodb.net/places?retryWrites=true&w=majority')
+    .connect('mongodb+srv://joev1234:joev1234@merncluster.bviydpu.mongodb.net/mern?retryWrites=true&w=majority')
     .then( () => {
         app.listen(process.env.PORT);
     })
