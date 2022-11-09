@@ -3,20 +3,22 @@ const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
 const getCoordsForAddress = require('../util/location');
 const Place = require('../models/place');
+const User = require('../models/user');
+const { default: mongoose } = require('mongoose');
 
-let DUMMY_PLACES = [
-    {
-        id: 'p1',
-        title: 'Empire state buldig',
-        description: 'desc 1',
-        location: {
-            lat: 501,
-            lng: 1341,
-        },
-        address: 'address 1',
-        creator: 'u1'
-    }
-];
+// let DUMMY_PLACES = [
+//     {
+//         id: 'p1',
+//         title: 'Empire state buldig',
+//         description: 'desc 1',
+//         location: {
+//             lat: 501,
+//             lng: 1341,
+//         },
+//         address: 'address 1',
+//         creator: 'u1'
+//     }
+// ];
 
 //GET gets places from ID
 const getPlaceById = async (req, res, next) => {
@@ -86,7 +88,6 @@ const createPlace = async function(req, res, next) {
         return next(error);
     }
     
-
     const createdPlace = new Place({
         title,
         description,
@@ -96,10 +97,34 @@ const createPlace = async function(req, res, next) {
         creator
     });
 
-    // DUMMY_PLACES.push( createdPlace ); //unshift if you want to add it first
+    let user;
 
     try{
-        await createdPlace.save();
+        user = await User.findById(creator);
+    } catch( err ){
+        const error = new HttpError(
+            'Creating place failed, please try again',
+            500
+        );
+        return next(error);
+    }
+
+    if(!user){
+        const error = new HttpError(
+            'Could not find user for provided id',
+            404
+        );
+    }
+
+
+    try{
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdPlace.save({ session: sess});
+        user.places.push(createdPlace);
+        await user.save({ sessions: sess });
+        await sess.commitTransaction();
+
     } catch ( err ) {
         const error = new HttpError(
             'Creating place failed, please try again.',
